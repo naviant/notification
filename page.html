@@ -108,13 +108,13 @@ let l=[32,500,616,657,856,910,922,952,1045,1149,1157,1254,1335,1359,1505,1522,15
             if(l[i]<(time+noticTime)){
                     table[i].classList.add('active');
                     activeList.push([l[i],i]);
+                    i++;
                 }else if(activeList.length==0){
                     table[i].classList.add('active');
                     activeList.push([l[i],i]);
                     i++
                     break;
                 }else{
-                    i++;
                     break;
                 }
         }
