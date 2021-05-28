@@ -7,21 +7,17 @@
 <style>
     body{
         margin: 0px;
-    }
-    h3{
-        text-align:center;
+        font-size: 15mm;
     }
     table{
         margin: auto;
         text-align:center;
         border-collapse: collapse;
-    }
-    .train{
-        padding-left: 15px;
-        padding-right: 5px;
+        max-width: 1000px;
+        overflow: scroll;
     }
     .time{
-        border-left: 2px gray solid;
+        border-left: 3px gray solid;
         font-size: 1.5em;
     }
     .space{
@@ -30,10 +26,8 @@
     .red{
         color:red;
     }
-    .route{
-        padding-right: 20px;
-        padding-left: 20px;
-        white-space: nowrap;
+    .red .stDep{
+        font-weight: bold;
     }
     .green{
         color:green;
@@ -41,57 +35,31 @@
     .past{
         color:gray;
     }
-    .active{
-
-    }
     .active.red{
         background-color: red;
         border:1px solid red;
         color: white;
-
     }
     .active.green{
         background-color: green;
         border:1px solid green;
         color: white;
     }
-    date{
-        position: absolute;
-        margin-left: 75%;
-    }
-    table{
-        position: absolute;
-        margin: auto;
-        height: 85%;
-/*        width: 95%;*/
-        overflow: scroll;
-        overflow-x: hidden;
-    }
     ::-webkit-scrollbar {
       width: 0;
     }
+    .stDep{
+        padding-right: 5mm;
+    }
     th{
        position: sticky;
-       top:0;
-       z-index: 2;
+       top:0px;
        background-color: white;
        height: 15mm;
-    }
-    .timeDep{
-        display: none;
-    }
-    .stArr{
-        display: none;
-
-    }
-    .timeArr{
-        display: none;
-    }
-    .train{
-        display: none;
+        font-weight: normal;
     }
     #mainStantion{
-        border-left: 2px gray solid;
+        border-left: 3px gray solid;
         white-space: nowrap;
         padding-left: 10px;
         background: linear-gradient(0deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
@@ -99,75 +67,118 @@
     th.stDep{
         background: linear-gradient(0deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
     }
-    button{
-        width: 10mm;
-        height: 15mm;
-        border: none;
-        font-size: 1.3em;
-
-    }
-    #buttons{
-        display: flex;
-        justify-content: flex-end;
-    }
     #realTime{
         font-size: 1.5em;
         font-weight: normal;
     }
+    button{
+        border: 2px solid lightgray;
+        font-size: 1.3em;
+        border-radius: 15%;
+        margin-right: 5px;
+    }
     #volume{
+        position: absolute;
+        color: lightgray;
         background-image: url(volumeOff.svg);
         background-size: cover;
-        margin-right: 5mm;
-        width: 15mm;
+        width: 1em;
+        height: 1em;
+        margin-top: 3em;
+    }
+    #menu{
+        position: absolute;
+        margin-top: 0.5em;
+        font-size: 0.8em;
+    }
+    #date{
+        position: sticky;
+        font-size: 0.8em;
+        bottom: 0;
+        background-color: white;
+        margin-top: 5px;
+        background: linear-gradient(180deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
+    }
+    #block1{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+    #block2{
+        width: 100%;
+        max-width: 1000px;
+        margin: auto;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+    #tableDiv{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
     }
 </style>
     
 </head>
 <body>
+<div id="block1">
+<div id="block2">
+<button id="volume"></button>
+<button id="menu">&#8801</button>
+</div>
+</div>
 <table>
 <thead>
-<tr><th></th><th id="realTime"></th><th class="timeDep"></th><th class="stDep">от ст.</th><th id="mainStantion">Cтанция "Выборг"</th><th class="stArr">до ст.</th><th class="timeArr"></th><th>20.05.2021</th><th id="buttons"><button id="volume"></button><button>&#8801</button></th></tr>
+<tr><th><div id="realTime"></div></th> <th class="stDep">от ст.</th><th id="mainStantion">ст. "Выборг"</th><th></th></tr>
 </thead>
 <tbody>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">22:24</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">00:32</td><td class=    "route stArr">Выборг</td><td class="timeArr">00:32</td>    <td colspan="2" class="space" id="note0"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">05:00</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">05:00</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">07:10</td>    <td colspan="2" class="space" id="note1"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">06:16</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">06:16</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">08:44</td>    <td colspan="2" class="space" id="note2"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">06:57</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">06:57</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">08:12</td>    <td colspan="2" class="space" id="note3"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">07:58</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">07:58</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">10:26</td>    <td colspan="2" class="space" id="note4"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">06:47</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">08:56</td><td class=    "route stArr">Выборг</td><td class="timeArr">08:56</td>    <td colspan="2" class="space" id="note5"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">07:55</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">09:10</td><td class=    "route stArr">Выборг</td><td class="timeArr">09:10</td>    <td colspan="2" class="space" id="note6"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">09:22</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">09:22</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">10:37</td>    <td colspan="2" class="space" id="note7"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">09:52</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">09:52</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">12:00</td>    <td colspan="2" class="space" id="note8"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">09:30</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">10:45</td><td class=    "route stArr">Выборг</td><td class="timeArr">10:45</td>    <td colspan="2" class="space" id="note9"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">09:35</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">11:49</td><td class=    "route stArr">Выборг</td><td class="timeArr">11:49</td>    <td colspan="2" class="space" id="note10"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">11:57</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">11:57</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">14:07</td>    <td colspan="2" class="space" id="note11"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">13:02</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">13:02</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">14:17</td>    <td colspan="2" class="space" id="note12"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">13:50</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">15:05</td><td class=    "route stArr">Выборг</td><td class="timeArr">15:05</td>    <td colspan="2" class="space" id="note13"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">15:33</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">15:33</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">17:45</td>    <td colspan="2" class="space" id="note14"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">13:55</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">16:06</td><td class=    "route stArr">Выборг</td><td class="timeArr">16:06</td>    <td colspan="2" class="space" id="note15"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">16:31</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">16:31</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">19:05</td>    <td colspan="2" class="space" id="note16"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">15:40</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">16:55</td><td class=    "route stArr">Выборг</td><td class="timeArr">16:55</td>    <td colspan="2" class="space" id="note17"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">17:05</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">17:05</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">18:20</td>    <td colspan="2" class="space" id="note18"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">17:23</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">17:23</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">21:45</td>    <td colspan="2" class="space" id="note19"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">15:50</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">18:01</td><td class=    "route stArr">Выборг</td><td class="timeArr">18:01</td>    <td colspan="2" class="space" id="note20"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">18:40</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">18:40</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">19:55</td>    <td colspan="2" class="space" id="note21"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">18:15</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">19:30</td><td class=    "route stArr">Выборг</td><td class="timeArr">19:30</td>    <td colspan="2" class="space" id="note22"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">19:38</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">19:38</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">21:51</td>    <td colspan="2" class="space" id="note23"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">20:44</td><td class="route stDep">    Выборг</td><td class="train">Ласточка</td>    <td class="time">20:44</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">21:59</td>    <td colspan="2" class="space" id="note24"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">20:50</td><td class="route stDep">    Выборг</td><td class="train">Пригородный</td>    <td class="time">20:50</td><td class=    "route stArr">Санкт-Петербург</td><td class="timeArr">23:16</td>    <td colspan="2" class="space" id="note25"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">18:28</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">21:06</td><td class=    "route stArr">Выборг</td><td class="timeArr">21:06</td>    <td colspan="2" class="space" id="note26"></td></tr>
-<tr class="red"><td colspan="2" class="space">    </td><td class="timeDep">20:42</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Ласточка</td>    <td class="time">21:57</td><td class=    "route stArr">Выборг</td><td class="timeArr">21:57</td>    <td colspan="2" class="space" id="note27"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">18:39</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">22:49</td><td class=    "route stArr">Выборг</td><td class="timeArr">22:49</td>    <td colspan="2" class="space" id="note28"></td></tr>
-<tr class="green"><td colspan="2" class="space">    </td><td class="timeDep">20:47</td><td class="route stDep">    Санкт-Петербург</td><td class="train">Пригородный</td>    <td class="time">22:58</td><td class=    "route stArr">Выборг</td><td class="timeArr">22:58</td>    <td colspan="2" class="space" id="note29"></td></tr>
-</tbody></table>
+<tr class="green"><td class="space"    id="note0"></td>    <td class="stDep">С-Пб</td><td class="time">00:32</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note1"></td>    <td class="stDep">Выборг</td><td class="time">05:00</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note2"></td>    <td class="stDep">Выборг</td><td class="time">06:16</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note3"></td>    <td class="stDep">Выборг</td><td class="time">06:57</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note4"></td>    <td class="stDep">Выборг</td><td class="time">07:58</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note5"></td>    <td class="stDep">С-Пб</td><td class="time">08:56</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note6"></td>    <td class="stDep">С-Пб</td><td class="time">09:10</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note7"></td>    <td class="stDep">Выборг</td><td class="time">09:22</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note8"></td>    <td class="stDep">Выборг</td><td class="time">09:52</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note9"></td>    <td class="stDep">С-Пб</td><td class="time">10:45</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note10"></td>    <td class="stDep">С-Пб</td><td class="time">11:49</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note11"></td>    <td class="stDep">Выборг</td><td class="time">11:57</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note12"></td>    <td class="stDep">Выборг</td><td class="time">13:02</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note13"></td>    <td class="stDep">С-Пб</td><td class="time">15:05</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note14"></td>    <td class="stDep">Выборг</td><td class="time">15:33</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note15"></td>    <td class="stDep">С-Пб</td><td class="time">16:06</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note16"></td>    <td class="stDep">Выборг</td><td class="time">16:31</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note17"></td>    <td class="stDep">С-Пб</td><td class="time">16:55</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note18"></td>    <td class="stDep">Выборг</td><td class="time">17:05</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note19"></td>    <td class="stDep">Выборг</td><td class="time">17:23</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note20"></td>    <td class="stDep">С-Пб</td><td class="time">18:01</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note21"></td>    <td class="stDep">Выборг</td><td class="time">18:40</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note22"></td>    <td class="stDep">С-Пб</td><td class="time">19:30</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note23"></td>    <td class="stDep">Выборг</td><td class="time">19:38</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note24"></td>    <td class="stDep">Выборг</td><td class="time">20:44</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note25"></td>    <td class="stDep">Выборг</td><td class="time">20:50</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note26"></td>    <td class="stDep">С-Пб</td><td class="time">21:06</td>    <td class="space"></td></tr>
+<tr class="red"><td class="space"    id="note27"></td>    <td class="stDep">С-Пб</td><td class="time">21:57</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note28"></td>    <td class="stDep">С-Пб</td><td class="time">22:49</td>    <td class="space"></td></tr>
+<tr class="green"><td class="space"    id="note29"></td>    <td class="stDep">С-Пб</td><td class="time">22:58</td>    <td class="space"></td></tr>
+<tr ><td id="date" colspan="4">28.05.2021</td></tr>
+</tbody>
+</table>
 <audio src='mp3/sound.mp3' preload="auto"></audio>
 </body>
 <script>
 let l=[32,500,616,657,758,856,910,922,952,1045,1149,1157,1302,1505,1533,1606,1631,1655,1705,1723,1801,1840,1930,1938,2044,2050,2106,2157,2249,2258];
+    let date = new Date();
+//    let iii=2;
+//    console.log(Math.trunc(l[iii]/100)-date.getHours());
+    let val=String(6*window.devicePixelRatio)+'mm';
+    document.querySelector('body').style.fontSize=val;
     let noticTime=15; // в минутах
     let soundTime=3;
     let table=document.querySelector('tbody').children;
-    let date = new Date();
     let time = date.getHours()*100+date.getMinutes();
     let i;
     let activeList=[];
@@ -176,6 +187,7 @@ let l=[32,500,616,657,758,856,910,922,952,1045,1149,1157,1302,1505,1533,1606,163
     let volumeEl=document.getElementById('volume');
     let realTime=document.getElementById('realTime');
     realTime.textContent=`${date.toTimeString()}`.slice(0,5);
+    let noteIndex;
     for(i=0; i<l.length; i++){
         if(l[i]<time){
             table[i].classList.add('past');
@@ -194,7 +206,7 @@ let l=[32,500,616,657,758,856,910,922,952,1045,1149,1157,1302,1505,1533,1606,163
                 }
         }
     }
-
+    noteIndex=i-1;
     function f(){
         date = new Date();
         time = date.getHours()*100+date.getMinutes();
@@ -246,6 +258,7 @@ let l=[32,500,616,657,758,856,910,922,952,1045,1149,1157,1302,1505,1533,1606,163
     function timeF(){
         date = new Date();
         realTime.textContent=`${date.toTimeString()}`.slice(0,5);
+//        timeRest();
     }
     let timerId2=setInterval(timeF,1000);
     volumeEl.addEventListener('click',volumeF);
@@ -260,6 +273,11 @@ let l=[32,500,616,657,758,856,910,922,952,1045,1149,1157,1302,1505,1533,1606,163
             volumeEl.style.backgroundImage = "url('volumeOff.svg')";
         }
     }
+    function timeRest(){
+        let i=activeList[0][1]
+            if(i==0){;}
+        table[i].children[0].textContent=`${Math.trunc(l[i]/100)-date.getHours()}h${Math.trunc(l[i]%100)-date.getMinutes()}m`
+        }
 
 </script>
 </html>
