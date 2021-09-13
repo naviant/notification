@@ -7,24 +7,6 @@
 <style>
     body{
         margin: 0px;
-        font-size: 15mm;
-    }
-    table{
-        margin: auto;
-        text-align:center;
-        border-collapse: collapse;
-        max-width: 1000px;
-        overflow: scroll;
-    }
-    .time{
-        border-left: 3px gray solid;
-        font-size: 1.5em;
-    }
-    .space{
-        width:50%;
-        text-align: left;
-        padding-left: 1%;
-        font-size: 0.8em;
     }
     .red{
         color:red;
@@ -34,6 +16,9 @@
     }
     .green{
         color:green;
+    }
+    .brown{
+        color: #B8860B;
     }
     .past{
         color:gray;
@@ -48,268 +33,287 @@
         border:1px solid green;
         color: white;
     }
+    .active.brown{
+        background-color: #B8860B;
+        border:1px solid #B8860B;
+        color: white;
+    }
     ::-webkit-scrollbar {
       width: 0;
-    }
-    .stDep{
-        padding-right: 5mm;
-    }
-    th{
-       position: sticky;
-       top:0px;
-       background-color: white;
-       height: 15mm;
-        font-weight: normal;
-    }
-    #mainStantion{
-        border-left: 3px gray solid;
-        white-space: nowrap;
-        padding-left: 10px;
-        background: linear-gradient(0deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
-    }
-    th.stDep{
-        background: linear-gradient(0deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
     }
     #realTime{
         font-size: 1.5em;
         font-weight: normal;
     }
-    button{
-        border: 2px solid lightgray;
-        font-size: 1.3em;
-        border-radius: 15%;
-        margin-right: 5px;
+    .wrapper {
+       display: grid;
+       grid-template-columns: 1fr;
     }
-    #volume{
-        position: absolute;
-        color: lightgray;
-        background-image: url(volumeOff.svg);
-        background-size: cover;
-        width: 1em;
-        height: 1em;
-        margin-top: 3em;
+    .tr{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
     }
-    #menu{
-        position: absolute;
-        margin-top: 0.5em;
-        font-size: 0.8em;
-    }
-    #date{
-        position: sticky;
-        font-size: 0.8em;
-        bottom: 0;
-        background-color: white;
-        margin-top: 5px;
-        background: linear-gradient(180deg, rgba(91, 89, 89, 1) 0%, rgba(255, 255, 255, 1) 5%);
-    }
-    #block1{
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-    }
-    #block2{
-        width: 100%;
-        max-width: 1000px;
-        margin: auto;
-        height: 100%;
+    .cell{
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
+        align-items: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
-    #tableDiv{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: scroll;
+    .title{
+        font-size: 0.6em;
+    }
+    .header {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        position: sticky;
+        position: -webkit-sticky;
+        background-color: white;
+        top: 0;
+        border-bottom: 1px solid black;
+
+    }
+    #realTime{
+        font-size: 1.5em;
+        font-weight: normal;
+    }
+    .stDep{
+        border-right: 1px solid black;
+    }
+    #stantion{
+        grid-column-start: 3;
+        grid-column-end: 5;
+        justify-content: flex-start;
+        padding-left: 7%;
+    }
+    select{
+        font-size: 1em;
+        border: 2px solid lightgray;
+        width: 50%;
+        border-radius: 5px;
     }
 </style>
     
 </head>
 <body>
-<div id="block1">
-<div id="block2">
-<button id="volume"></button>
-<button id="menu">&#8801</button>
-</div>
-</div>
-<table>
-<thead>
-<tr><th><div id="realTime"></div></th> <th class="stDep">от ст.</th><th id="mainStantion">ст. "Выборг"</th><th></th></tr>
-</thead>
-<tbody>
-<tr class="green"><td class="space"    id="note0"></td>    <td class="stDep">С-Пб</td><td class="time">00:32</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note1"></td>    <td class="stDep">Выборг</td><td class="time">05:00</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note2"></td>    <td class="stDep">Выборг</td><td class="time">06:16</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note3"></td>    <td class="stDep">Выборг</td><td class="time">06:57</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note4"></td>    <td class="stDep">Выборг</td><td class="time">07:58</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note5"></td>    <td class="stDep">С-Пб</td><td class="time">08:56</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note6"></td>    <td class="stDep">С-Пб</td><td class="time">09:10</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note7"></td>    <td class="stDep">Выборг</td><td class="time">09:22</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note8"></td>    <td class="stDep">Выборг</td><td class="time">09:52</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note9"></td>    <td class="stDep">С-Пб</td><td class="time">10:33</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note10"></td>    <td class="stDep">С-Пб</td><td class="time">10:45</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note11"></td>    <td class="stDep">Выборг</td><td class="time">11:20</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note12"></td>    <td class="stDep">С-Пб</td><td class="time">11:49</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note13"></td>    <td class="stDep">Выборг</td><td class="time">11:57</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note14"></td>    <td class="stDep">Выборг</td><td class="time">13:02</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note15"></td>    <td class="stDep">С-Пб</td><td class="time">15:05</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note16"></td>    <td class="stDep">Выборг</td><td class="time">15:33</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note17"></td>    <td class="stDep">С-Пб</td><td class="time">16:06</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note18"></td>    <td class="stDep">Выборг</td><td class="time">16:31</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note19"></td>    <td class="stDep">С-Пб</td><td class="time">16:55</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note20"></td>    <td class="stDep">Выборг</td><td class="time">17:05</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note21"></td>    <td class="stDep">Выборг</td><td class="time">17:23</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note22"></td>    <td class="stDep">С-Пб</td><td class="time">18:01</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note23"></td>    <td class="stDep">Выборг</td><td class="time">18:44</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note24"></td>    <td class="stDep">Выборг</td><td class="time">18:55</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note25"></td>    <td class="stDep">С-Пб</td><td class="time">19:10</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note26"></td>    <td class="stDep">С-Пб</td><td class="time">19:30</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note27"></td>    <td class="stDep">Выборг</td><td class="time">19:38</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note28"></td>    <td class="stDep">Выборг</td><td class="time">20:44</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note29"></td>    <td class="stDep">Выборг</td><td class="time">20:50</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note30"></td>    <td class="stDep">С-Пб</td><td class="time">21:06</td>    <td class="space"></td></tr>
-<tr class="red"><td class="space"    id="note31"></td>    <td class="stDep">С-Пб</td><td class="time">21:57</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note32"></td>    <td class="stDep">С-Пб</td><td class="time">22:49</td>    <td class="space"></td></tr>
-<tr class="green"><td class="space"    id="note33"></td>    <td class="stDep">С-Пб</td><td class="time">22:58</td>    <td class="space"></td></tr>
-<tr ><td id="date" colspan="4">28.06.2021</td></tr>
-</tbody>
-</table>
-<audio src='mp3/sound.mp3' preload="auto"></audio>
-</body>
-<script>
-let l=[32,500,616,657,758,856,910,922,952,1033,1045,1120,1149,1157,1302,1505,1533,1606,1631,1655,1705,1723,1801,1844,1855,1910,1930,1938,2044,2050,2106,2157,2249,2258];
-    let date = new Date();
-    let time = date.getHours()*100+date.getMinutes();
-    let val=String(6*window.devicePixelRatio)+'mm';
-    document.querySelector('body').style.fontSize=val;
-    let noticTime=15; // в минутах
-    let soundTime=3;
-    let table=document.querySelector('tbody').children;
-    let i;
-    let activeList=[];
-    let audio=document.querySelector('audio');
-    let volumeFlag=false;
-    let volumeEl=document.getElementById('volume');
-    let realTime=document.getElementById('realTime');
-    realTime.textContent=`${date.toTimeString()}`.slice(0,5);
-    for(i=0; i<l.length; i++){
-        if(l[i]<time){
-            table[i].classList.add('past');
-        }else{
-            if(l[i]<=(time+noticTime)){
-                    table[i].classList.add('active');
-                    activeList.push([l[i],i]);
+<div class="header">
+<div class="cell" id="realTime"></div>
+<div class="cell stDep">от ст.</div>
+<div class="cell" id="stantion">на ст.
+<select>
+<option value="0">Выборг</option>
+<option value="1">Лазоревка</option>
+<option value="2">Верхне-Черкасово</option>
+<option value="3">117км</option>
+<option value="4">Лебедевка</option>
+<option value="5">Гаврилово</option>
+<option value="6">Лейпясуо</option>
+<option value="7">Кирилловское</option>
+<option value="8">Заходское</option>
+<option value="9">Каннельярви</option>
+<option value="10">73км(Шевелёво)</option>
+<option value="11">Горьковское</option>
+<option value="12">63км</option>
+<option value="13">Рощино</option>
+<option value="14">Ушково</option>
+<option value="15">Зеленогорск</option>
+<option value="16">Комарово</option>
+<option value="17">Репино</option>
+<option value="18">Солнечное</option>
+<option value="19">Белоостров</option>
+<option value="20">Дибуны</option>
+<option value="21">Песочная</option>
+<option value="22">Левашово</option>
+<option value="23">Парголово</option>
+<option value="24">Шувалово</option>
+<option value="25">Озерки</option>
+<option value="26">Удельная</option>
+<option value="27">Ланская</option>
+<option value="28">Финляндский вокзал</option>
 
-                }else if(activeList.length==0){
-                    table[i].classList.add('active');
-                    activeList.push([l[i],i]);
-                    i++
-                    break;
-                }else{
-                    break;
-                }
-        }
+</select>
+</div>
+</div>
+<div class="wrapper" id="table">
+</div>
+</body>
+<script src="lists.js"></script>
+<script>
+let size=String(6*window.devicePixelRatio)+'mm';
+document.querySelector('body').style.fontSize=size;
+let date = new Date();
+let time = date.getHours()*60+date.getMinutes();
+let realTime=document.getElementById('realTime');
+realTime.textContent=`${date.toTimeString()}`.slice(0,5);
+let table=document.getElementById('table');
+function tabCont(trainColor,stDep,stationTime,title){ 
+    tr=document.createElement('div');
+    tr.className='tr '+trainColor;
+    table.append(tr);
+    cell1=document.createElement('div');
+    cell1.className='cell stDep ';
+    cell1.textContent=stDep;
+    cell2=document.createElement('div');
+    cell2.className='cell time ';
+    cell2.textContent=stationTime;
+    cell3=document.createElement('div');
+    cell3.className='cell title';
+    cell3.textContent=title;
+    cell4=document.createElement('div');
+    cell4.className='cell';
+    tr.append(cell4,cell1,cell2,cell3);
     }
-    if(i!=1){table[i-2].children[0].textContent='через:';}
-    function f(){
-        date = new Date();
-        time = date.getHours()*100+date.getMinutes();
-//конец списка
-        if(l[i+1]==undefined){
-            console.log('конец списка');
-            console.log(time);
-            if(activeList[0][0]<time+soundTime){
-               if (volumeFlag==true){
-                   audio.play();
-               }
-               }
-            if (activeList[0][0]<time-2){
-                table[activeList[0][1]-1].children[0].textContent='';
-                table[activeList[0][1]].classList.remove('active');
-                table[activeList[0][1]].classList.add('past');
-                table[activeList[0][1]].children[0].textContent='через:';
-                activeList.splice(0,1);
-                if(activeList.length==0){
-                    clearTimeout(timerId);
-                    clearTimeout(timerId2);
+let selNum=0;
+for (n in mList[selNum]){
+    let i=mList[selNum][n];
+    
+    let trainColor;
+    switch(i[1]){
+        case 1:
+            trainColor='green';
+            break;
+        case 2:
+            trainColor='red';
+            break;
+        case 3:
+            trainColor='brown';
+            break;
+    }
+    let stDep=i[2];
+    let stationTime=i[0];
+    let title='';
+    if (i[1]==3){
+        title=i[3];
+    }
+    tabCont(trainColor,stDep,stationTime,title);    
+}
+let i;
+let l=timeList[selNum];
+let notifTime=8;
+let trows=document.getElementById('table').children;
+let activeList=[];
+(()=>{
+    for(i=0; i<l.length; i++){
+            if(l[i]<time){
+                trows[i].classList.add('past');
+            }else{
+                if(l[i]<=(time+notifTime)){
+                        trows[i].classList.add('active');
+                        activeList.push([l[i],i]);
+
+                    }else if(activeList.length==0){
+                        trows[i].classList.add('active');
+                        activeList.push([l[i],i]);
+                        i++
+                        break;
+                    }else{
+                        break;
                     }
-                }
-            return;
+            }
         }
+})()    
+if(i!=1){trows[i-2].children[0].textContent='через:';}
+if(i>3){
+    trows[i-4].scrollIntoView();
+}
+function f(){
+    date = new Date();
+    time = date.getHours()*60+date.getMinutes();
+//конец списка
+    if(l[i+1]==undefined){
+        console.log('конец списка');
+        console.log(time);
+        if(activeList[0][0]<time+soundTime){
+           if (volumeFlag==true){
+               audio.play();
+           }
+           }
         if (activeList[0][0]<time-2){
-            if(i>1){table[activeList[0][1]-1].children[0].textContent='';}
-            table[activeList[0][1]].classList.remove('active');
-            table[activeList[0][1]].classList.add('past');
-            table[activeList[0][1]].children[0].textContent='через:';
+            trows[activeList[0][1]-1].children[0].textContent='';
+            trows[activeList[0][1]].classList.remove('active');
+            trows[activeList[0][1]].classList.add('past');
+            trows[activeList[0][1]].children[0].textContent='через:';
             activeList.splice(0,1);
             if(activeList.length==0){
-                activeList.push([l[i],i]);
-                table[i].classList.add('active');
-                i++;
+                clearTimeout(timerId);
+                clearTimeout(timerId2);
+                }
             }
-        }
-        if(l[i]<(time+noticTime)){
+        return;
+    }
+    if (activeList[0][0]<time-2){
+        if(i>1){trows[activeList[0][1]-1].children[0].textContent='';}
+        trows[activeList[0][1]].classList.remove('active');
+        trows[activeList[0][1]].classList.add('past');
+        trows[activeList[0][1]].children[0].textContent='через:';
+        activeList.splice(0,1);
+        if(activeList.length==0){
             activeList.push([l[i],i]);
-            table[i].classList.add('active');
+            trows[i].classList.add('active');
             i++;
         }
-        if(activeList[0][0]<time+soundTime){
-               if (volumeFlag==true){
-                   audio.play();
-               }}
-        if(i>3){
-            table[i-4].scrollIntoView();
-        }
     }
-    f();
+    if(l[i]<(time+notifTime)){
+        activeList.push([l[i],i]);
+        trows[i].classList.add('active');
+        i++;
+    }
+//    if(activeList[0][0]<time+soundTime){
+//           if (volumeFlag==true){
+//               audio.play();
+//           }}
+    
+}
+f();
 
-    volumeEl.addEventListener('click',volumeF);
 
-    function volumeF(){
-        if(volumeFlag==false){
-            volumeFlag=true;
-            volumeEl.style.backgroundImage = "url('volumeOn.svg')";
-            audio.play();
-        }else{
-            volumeFlag=false;
-            volumeEl.style.backgroundImage = "url('volumeOff.svg')";
+function timeRest(){
+    let i=activeList[0][1];
+    trows[i].children[0].innerHTML=
+        timeDif(l[i],date.getHours(),date.getMinutes());
+    if(i+1<=l.length){
+       i++; 
+        trows[i].children[0].innerHTML=
+            timeDif(l[i],date.getHours(),date.getMinutes());
+        }
+    if(i+2<=l.length){
+       i++; 
+        trows[i].children[0].innerHTML=
+            timeDif(l[i],date.getHours(),date.getMinutes());
         }
     }
-    function timeRest(){
-        let i=activeList[0][1];
-        table[i].children[0].innerHTML=timeDif(Math.trunc(l[i]/100),l[i]%100,date.getHours(),date.getMinutes());
-        if(i+1<=l.length){
-           i++; table[i].children[0].innerHTML=timeDif(Math.trunc(l[i]/100),l[i]%100,Math.trunc(time/100),time%100);
-        }
+timeRest()
+function timeDif(h1m1,h2,m2){
+    let sum1=h1m1
+    let sum2=h2*60+m2;
+    let h=Math.trunc((sum1-sum2)/60);
+    let m=sum1-sum2-h*60;
+    if(m<0){
+        return " 0 мин"
     }
-    timeRest()
-    // ф-я возвращает разницу между двумя значениями времени hh mm ;
-    function timeDif(h1,m1,h2,m2){
-        let sum1=h1*60+m1;
-        let sum2=h2*60+m2;
-        let h=Math.trunc((sum1-sum2)/60);
-        let m=sum1-sum2-h*60;
-        if(m<0){
-            return " 0 мин"
-        }
-        if(h==0){
-            if(m<10){
-            m=`<b>0${m}</b>`;
-            }
-            return `<b>${m}</b> мин`
-        }
+    if(h==0){
         if(m<10){
-            m=`<b>0${m}</b>`;
+        m=`<b>0${m}</b>`;
         }
-        return `<b>${h}</b>ч <b>${m}</b>м`
+        return `<b>${m}</b>&nbspмин`
     }
-    function timeF(){
-        date = new Date();
-        realTime.textContent=`${date.toTimeString()}`.slice(0,5);
-        timeRest();
+    if(m<10){
+        m=`<b>0${m}</b>`;
     }
-    let timerId=setInterval(timeF,5000);
-    let timerId2=setInterval(f,30000);
-
+    return `<b>${h}</b>ч <b>${m}</b>м`
+}
+function timeF(){
+    date = new Date();
+    realTime.textContent=`${date.toTimeString()}`.slice(0,5);
+    timeRest();
+}
+function scrolF(){
+    if(i>3){
+    trows[i-4].scrollIntoView();
+    }
+}
+let timerId=setInterval(timeF,1000);
+let timerId2=setInterval(f,2000);
+let timerId3=setInterval(scrolF,15000);
 </script>
 </html>
