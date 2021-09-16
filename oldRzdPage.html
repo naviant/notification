@@ -155,6 +155,7 @@ let selNum;
 function gridTable(){
     selNum=Number(selEl.value);
     console.log(selNum);
+    table.innerHTML='';
     function tabCont(trainColor,stDep,stationTime,title){
         let tr=document.createElement('div');
         tr.className='tr '+trainColor;
