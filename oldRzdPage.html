@@ -51,7 +51,7 @@
     }
     .tr{
         display: grid;
-        grid-template-columns: 20% 30% 20% 30%;
+        grid-template-columns: repeat(4, 1fr);
     }
     .cell{
         display: flex;
@@ -62,7 +62,7 @@
     }
     .header {
         display: grid;
-        grid-template-columns: 20% 30% 50%;
+        grid-template-columns: repeat(4, 1fr);
         position: sticky;
         position: -webkit-sticky;
         background-color: white;
@@ -92,6 +92,7 @@
     .footer{
         font-size: 0.8em;
         border-top: 1px solid black;
+        text-align: center;
     }
 </style>
     
@@ -140,8 +141,7 @@
 </body>
 <script src="lists.js"></script>
 <script>
-
-
+let footDate='2021.09.17';
 let size=String(6*window.devicePixelRatio)+'mm';
 document.querySelector('body').style.fontSize=size;
 let date = new Date();
@@ -151,10 +151,14 @@ realTime.textContent=`${date.toTimeString()}`.slice(0,5);
 let table=document.getElementById('table');
 let selEl=document.getElementById('selEl');
 selEl.addEventListener('change',gridTable);
+let notifTime=8;
 let selNum;
+let i;
+let l;
+let trows;
+let activeLis;
 function gridTable(){
     selNum=Number(selEl.value);
-    console.log(selNum);
     table.innerHTML='';
     function tabCont(trainColor,stDep,stationTime,title){
         let tr=document.createElement('div');
@@ -198,39 +202,46 @@ function gridTable(){
     }
     let footer=document.createElement('div');
     footer.className='cell footer';
-    footer.textContent='1234234234';
+    footer.innerHTML=footDate+'<br>если найдете ошибку, пишите на naviantropos@gmail.com';
     table.append(footer);
+    i;
+    l=timeList[selNum];
+    trows=document.getElementById('table').children;
+    activeList=[];
+
+    (()=>{
+        for(i=0; i<l.length; i++){
+                if(l[i]<time){
+                    trows[i].classList.add('past');
+                }else{
+                    if(l[i]<=(time+notifTime)){
+                            trows[i].classList.add('active');
+                            activeList.push([l[i],i]);
+
+                        }else if(activeList.length==0){
+                            trows[i].classList.add('active');
+                            activeList.push([l[i],i]);
+                            i++
+                            break;
+                        }else{
+                            break;
+                        }
+                }
+            }
+    })()
+    if(i!=1){trows[i-2].children[0].textContent='через:';}
+    if(i>3){
+        trows[i-4].scrollIntoView();
+    }
+    (()=>{
+    if(i>3){
+    trows[i-4].scrollIntoView();
+    }
+    })();
+
 }
 gridTable();
-let i;
-let l=timeList[selNum];
-let notifTime=8;
-let trows=document.getElementById('table').children;
-let activeList=[];
-(()=>{
-    for(i=0; i<l.length; i++){
-            if(l[i]<time){
-                trows[i].classList.add('past');
-            }else{
-                if(l[i]<=(time+notifTime)){
-                        trows[i].classList.add('active');
-                        activeList.push([l[i],i]);
 
-                    }else if(activeList.length==0){
-                        trows[i].classList.add('active');
-                        activeList.push([l[i],i]);
-                        i++
-                        break;
-                    }else{
-                        break;
-                    }
-            }
-        }
-})()
-if(i!=1){trows[i-2].children[0].textContent='через:';}
-if(i>3){
-    trows[i-4].scrollIntoView();
-}
 function f(){
     date = new Date();
     time = date.getHours()*60+date.getMinutes();
@@ -273,12 +284,8 @@ function f(){
         trows[i].classList.add('active');
         i++;
     }
-//    if(activeList[0][0]<time+soundTime){
-//           if (volumeFlag==true){
-//               audio.play();
-//           }}
-
 }
+
 f();
 
 
@@ -322,14 +329,9 @@ function timeF(){
     realTime.textContent=`${date.toTimeString()}`.slice(0,5);
     timeRest();
 }
-function scrolF(){
-    if(i>3){
-    trows[i-4].scrollIntoView();
-    }
-}
+
 let timerId=setInterval(timeF,1000);
-let timerId2=setInterval(f,2000);
-//let timerId3=setInterval(scrolF,15000);
-    
+let timerId2=setInterval(f,1000);
+
 </script>
 </html>
