@@ -51,7 +51,7 @@
     }
     .tr{
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr 2fr;
+        grid-template-columns: repeat(4, 1fr);
     }
     .cell{
         display: flex;
@@ -102,7 +102,7 @@
 <div class="cell" id="realTime"></div>
 <div class="cell stDep">от ст.</div>
 <div class="cell" id="stantion">на ст.
-<select id='selEl'>
+<select id="selEl">
 <option value="0">Выборг</option>
 <option value="1">Лазоревка</option>
 <option value="2">Верхне-Черкасово</option>
@@ -141,7 +141,7 @@
 </body>
 <script src="lists.js"></script>
 <script>
-let footDate='17.09.2021';
+let footDate="2021.09.21";
 let size=String(6*window.devicePixelRatio)+'mm';
 document.querySelector('body').style.fontSize=size;
 let date = new Date();
@@ -202,7 +202,7 @@ function gridTable(){
     }
     let footer=document.createElement('div');
     footer.className='cell footer';
-    footer.innerHTML=footDate+'<br>если найдете ошибку, пишите на naviantropos@gmail.com';
+    footer.innerHTML=footDate+'<br>о найденных ошибках просьба писать на почту- naviantropos@gmail.com';
     table.append(footer);
     i;
     l=timeList[selNum];
