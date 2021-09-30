@@ -3,6 +3,7 @@ from datetime import  datetime
 date='%02d-%02d-%d'%(datetime.now().year,datetime.now().month,datetime.now().day)
 mDict={}
 uids=[]
+laskaUids=[]
 def t_StoN(s):
     #возвращает n минут
     s=s.split(':')
@@ -22,9 +23,10 @@ def dictContent():
                 '&uid='+uid)
         r=r.json()
         #составляем словарь {остановка=[[время,поезд,ст. назн-ия]]}
-        stops=r['stops']
         train=r['transport_subtype']['title']
         duration=r['title']
+        stops=r['stops']
+
         for stop in stops:
             station=stop['station']['title']
             time=(stop['arrival'] or stop['departure'])[-8:-3]
@@ -36,14 +38,20 @@ def dictContent():
     for key in mDict:
         mDict[key]=sorted(mDict[key])
 
-
-
 def allUid():
     #заполнение uids
     def uExt(r):
         global uids
         for sch in r.json()['schedule']:
             uid=sch['thread']['uid']
+            duration=sch['thread']['title']
+            train=sch['thread']['transport_subtype']['title']
+            if train=='«Ласточка»' and (duration!='Санкт-Петербург (Финляндский вокзал) — Каннельярви' or
+            duration!='Каннельярви — Санкт-Петербург (Финляндский вокзал)'):
+                if uid in laskaUids: continue
+                laskaUids.append(uid)
+                continue
+
             if uid in uids: continue
             uids.append(uid)
 
@@ -53,7 +61,7 @@ def allUid():
     '&station=s9602497&transport_types=suburban&event=departure'+
     '&direction=Выборгское направление&date=%s'%(date))
     uExt(r)
-
+    r=requests.get('https://api.rasp.yandex.net/v3.0/schedule/?apikey=233d0d70-8861-4944-92ff-19b34348c0c9&station=s9602497&transport_types=suburban&event=departure&direction=Выборгское направление&date=%s'%(date))
     #finl arr
     r=requests.get('https://api.rasp.yandex.net/v3.0/schedule/'+
     '?apikey=233d0d70-8861-4944-92ff-19b34348c0c9'+
@@ -103,22 +111,86 @@ def allUid():
     '&date=%s'%(date))
     uExt(r)
 
-allUid()
-dictContent()
-#file=open('C:/save/saveDict','rb')
-#mDict=pickle.loads(pickle.load(file))
-#file.close()
+def lastochka():
+    notes=[]
+    def trSt(stops,mdict):
+        for stop in stops:
+            title=stop['station']['title']
+            if title in stKeys:
+                ta=stop['arrival']
+                if ta:ta=ta[-8:-3]
+                td=stop['departure']
+                if td:td=td[-8:-3]
+                mdict[title]=(ta,td)
+    for uid in laskaUids:
+        r=requests.get('https://api.rasp.yandex.net/v3.0/thread'+
+        '/?apikey=233d0d70-8861-4944-92ff-19b34348c0c9&format=json'+
+        '&uid='+uid)
+        r=r.json()
+        title=r['title']
+        mdict={}
+        trSt(r['stops'],mdict)
+        note=(title,mdict)
+        notes.append(note)
+    def trainHand(note):
+            title=note[0]
+            sch=note[1]
+            stDep='Выборг'
+            lastSt='Санкт-Петербург (Финляндский вокзал)'
+            s=km[0]
 
+            def f(stDep,lastSt,fl=0):
+                #fl = flag intermediate stantion
+                depI=stKeys.index(stDep)
+                lastI=stKeys.index(lastSt)
+                step=1
+                if depI>lastI:step=-1
 
-stKeys=('Выборг','Лазоревка','Верхне-Черкасово','117 км','Лебедевка',
-     'Гаврилово','Лейпясуо','Кирилловское','Заходское','Каннельярви',
-     '73 км (Шевелёво)','Горьковское','63 км','Рощино','Ушково',
-     'Зеленогорск','Комарово','Репино','Солнечное','Белоостров',
-     'Дибуны','Песочная','Левашово','Парголово','Шувалово',
-     'Озерки','Удельная','Ланская','Санкт-Петербург (Финляндский вокзал)',
-     'Санкт-Петербург (Ладожский вокзал)')
-km=[131,124.2,120,117,114,107.8,100,88,81,75,73,65.7,
-63,60,54.6,50,43.4,40,34.4,32,25.3,23.8,19.5,16,11,10,7.5,5,0]
+                order=range(depI,lastI-fl,step)
+                s=km[depI]-km[lastI]
+
+                timeList=[]
+                timeList.append(t_StoN(sch[stDep][1]))
+                t=abs(t_StoN(sch[stDep][1])-t_StoN(sch[lastSt][0]))
+                k=round(t/s,2)
+                mDict[stDep].append((sch[stDep][1],'Ласточка',title,stDep))
+                for i in order:
+                    s1=km[i]-km[i+step]
+                    t1=abs(round(k*s1))
+                    timeList.append(timeList[-1]+t1)
+                    mDict[stKeys[i+step]].append((t_NtoS(timeList[-1]),'Ласточка',title,stDep))
+
+            #все order на 1 меньше для for: i+1
+            if title=='Выборг — Санкт-Петербург (Финляндский вокзал)':
+                #разные скорости от Зеленогорска
+                lastSt='Рощино'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Зеленогорск'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Удельная'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Санкт-Петербург (Финляндский вокзал)'
+                f(stDep,lastSt)
+
+            if title=='Санкт-Петербург (Финляндский вокзал) — Выборг':
+                stDep=lastSt
+                lastSt='Удельная'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Зеленогорск'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Рощино'
+                f(stDep,lastSt,1)
+                stDep=lastSt
+                lastSt='Выборг'
+                f(stDep,lastSt)
+    for note in notes:
+        trainHand(note)
+
 def trains():
 
 
@@ -225,7 +297,30 @@ def trains():
 
     for note in notes:
         trainHand(note)
+
+
+km=[131,124.2,120,117,114,107.8,100,88,81,75,73,65.7,
+63,60,54.6,50,43.4,40,34.4,32,25.3,23.8,19.5,16,11,10,7.5,5,0]
+stKeys=('Выборг','Лазоревка','Верхне-Черкасово','117 км','Лебедевка',
+     'Гаврилово','Лейпясуо','Кирилловское','Заходское','Каннельярви',
+     '73 км (Шевелёво)','Горьковское','63 км','Рощино','Ушково',
+     'Зеленогорск','Комарово','Репино','Солнечное','Белоостров',
+     'Дибуны','Песочная','Левашово','Парголово','Шувалово',
+     'Озерки','Удельная','Ланская','Санкт-Петербург (Финляндский вокзал)',
+     'Санкт-Петербург (Ладожский вокзал)')
+
+allUid()
+dictContent()
+lastochka()
 trains()
+#file=open('C:/save/saveDict','rb')
+#mDict=pickle.loads(pickle.load(file))
+#file.close()
+
+
+
+
+
 
 mList=[]
 def listContent():
@@ -245,7 +340,7 @@ def listContent():
             train=note[1]
             if train=='Пригородный поезд':train=1
             if train=='состав 2-3 вагона':train=1
-            if train=='«Ласточка»':train=2
+            if train=='«Ласточка»' or train=='Ласточка':train=2
             if train=='Поезд':
                 train=3
                 stDep=note[3].split(' ')[0]
@@ -253,6 +348,7 @@ def listContent():
             else:stDep=note[2].split(' ')[0]
             if stDep=='Санкт-Петербург':stDep='С-Пб'
             l.append([time,train,stDep,title]) if title else l.append([time,train,stDep])
+        print(k)
         l=sorted(l)
         mList.append(l)
 listContent()
@@ -524,7 +620,7 @@ style='''
     }
     .tr{
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: 20% 30% 15% 35%;
     }
     .cell{
         display: flex;
@@ -535,7 +631,7 @@ style='''
     }
     .header {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: 20% 30% 50%;
         position: sticky;
         position: -webkit-sticky;
         background-color: white;
@@ -595,7 +691,7 @@ mS=['<!DOCTYPE html>','<html>',
     '</script>',
     '</html>']
 
-file=open(r'c:\Users\Iva\pit\oldRzdPage.html','w',encoding='utf-8')
+file=open(r'c:\Users\Iva\pit\NOTIFICATION.html','w',encoding='utf-8')
 for i in mS:
     file.write(i+'\n')
 
